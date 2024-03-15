@@ -1,2 +1,4 @@
 # yohadb
-REPACKING IS NOT FINISHED YET, YOU CAN ONLY UNPACK FROM ORIGINAL FILE ATM
+todo :
+  - correct json name unpack
+  - use tkinter
