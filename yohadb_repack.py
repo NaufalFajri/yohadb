@@ -29,11 +29,11 @@ def process_json_file(file_path):
             compressed_data = compress_data(msgpack_data)
             compressed_length = len(compressed_data)
             if compressed_length <= 0xFF:
-                header = b'\xc7' + struct.pack('>B', compressed_length) + b'\x63\xd2'
+                header = b'\xc7' + struct.pack('>B', compressed_length + 1) + b'\x63\xd2'
             elif compressed_length <= 0xFFFF:
-                header = b'\xc8' + struct.pack('>H', compressed_length) + b'\x63\xd2'
+                header = b'\xc8' + struct.pack('>H', compressed_length + 1) + b'\x63\xd2'
             elif compressed_length <= 0xFFFFFFFF:
-                header = b'\xc9' + struct.pack('>I', compressed_length) + b'\x63\xd2'
+                header = b'\xc9' + struct.pack('>I', compressed_length + 1) + b'\x63\xd2'
             else:
                 # For larger lengths, raise an error
                 raise ValueError("Compressed data length is too large to handle")
