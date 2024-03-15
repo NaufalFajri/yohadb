@@ -23,7 +23,7 @@ def process_json_file(file_path):
         json_data = json.load(json_file)
         if json_data == []:
             # If the JSON data is an empty array, replace it with the MessagePack representation of nil
-            return b'\xc0', 1  # Represents nil in MessagePack
+            return b'\x90', 1  # Represents nil in MessagePack
         else:
             msgpack_data = pack_json_to_msgpack(json_data)
             compressed_data = compress_data(msgpack_data)
@@ -52,6 +52,9 @@ def combine_to_file(output_file, data_dict):
         with open("test.json", "wb") as metadata_file:
             metadata_packed = msgpack.packb(metadata)
             metadata_file.write(metadata_packed)
+            
+        with open("test_uncom.json", "w") as metadata_file333:
+            json.dump(metadata, metadata_file333)
             
 def main():
     folder_path = "masterdata_unpacked"  # Specify your folder path containing JSON files
