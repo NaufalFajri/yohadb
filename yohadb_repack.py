@@ -3,7 +3,7 @@ import json
 import msgpack
 import lz4.block
 import struct
-
+# THIS THING NEED CLEAN UP, PLS SOMEONE HELP THIS
 def compress_data(data):
     compressed_data = lz4.block.compress(data)
     return compressed_data
@@ -49,27 +49,53 @@ def combine_to_file(output_file, data_dict):
             metadata[filename[:-5]] = [start_byte, length] #removing .json
             start_byte += length
         
-        with open("test.json", "wb") as metadata_file:
+        with open("temp2.json", "wb") as metadata_file:
             metadata_packed = msgpack.packb(metadata)
             metadata_file.write(metadata_packed)
             
-        with open("test_uncom.json", "w") as metadata_file333:
-            json.dump(metadata, metadata_file333)
+        #with open("test_uncom.json", "w") as metadata_file333:
+            #json.dump(metadata, metadata_file333)
             
+import os
+
 def main():
     folder_path = "masterdata_unpacked"  # Specify your folder path containing JSON files
-    output_file = "compressed.bytes"
+    output_file = "temp1.bin"
+    metadata_file = "temp2.json"
+    combined_output_file = "combined_file.bin"
+
     compressed_data_dict = {}
 
+    # Process each JSON file in the folder
     for filename in os.listdir(folder_path):
         if filename.endswith('.json'):
             file_path = os.path.join(folder_path, filename)
             compressed_data, length = process_json_file(file_path)
             compressed_data_dict[filename] = (compressed_data, length)
 
+    # Combine compressed data into output file
     combine_to_file(output_file, compressed_data_dict)
-    print("All JSON files processed and combined into compressed.bin")
-    print("Metadata saved to test.json")
+
+    # Read contents of metadata file
+    with open(metadata_file, 'rb') as meta_file:
+        metadata_content = meta_file.read()
+
+    # Read contents of compressed data file
+    with open(output_file, 'rb') as data_file:
+        data_content = data_file.read()
+
+    # Combine metadata and compressed data into a single file
+    combined_data_array = metadata_content + data_content
+
+    # Write the combined data array to a new file
+    with open(combined_output_file, 'wb') as combined_file:
+        combined_file.write(combined_data_array)
+
+    if os.path.exists(output_file):
+        os.remove(output_file)
+    if os.path.exists(metadata_file):
+        os.remove(metadata_file)
+    print("Combined file created:", combined_output_file)
 
 if __name__ == "__main__":
     main()
