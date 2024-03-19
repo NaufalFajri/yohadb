@@ -41,7 +41,7 @@ os.makedirs(path_exported_masterdata, exist_ok=True)
 for obj, file_name in zip(all_objects, file_names):
     # Write the object to the corresponding file
     file_path = os.path.join(path_exported_masterdata, file_name)
-    with open(file_path, "w") as json_file:
-        json.dump(obj, json_file)
+    with open(file_path, "w", encoding="utf-8") as json_file:
+        json.dump(obj, json_file, indent=2, ensure_ascii=False)
 
 print(f"Data written")
